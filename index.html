@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Inventors Hub - منصة عرض مخترعات المخترعين | Showcase Your Inventions">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="inventions, inventors, patents, مخترعات, مخترعين, براءات اختراع">
+    <meta property="og:title" content="Inventors Hub - منصة المخترعين">
+    <meta property="og:description" content="منصة مجانية لعرض مخترعات المخترعين والتواصل مع المشترين">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0EA5E9">
+    <meta name="author" content="Inventors Hub">
+    <meta name="language" content="Arabic, English">
+    <title>Inventors Hub - منصة المخترعين</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Splash -->
+    <div id="splash" class="splash">
+        <div class="splash-content">
+            <div class="splash-logo"><i class="fas fa-lightbulb"></i></div>
+            <h1 class="splash-title">Inventors Hub</h1>
+            <p class="splash-sub" data-ar="جاري التحميل..." data-en="Loading...">جاري التحميل...</p>
+            <div class="splash-loader"><div class="loader-bar"></div></div>
+        </div>
+    </div>
+
+    <!-- App -->
+    <div id="app" class="app hidden">
+        <!-- Nav -->
+        <nav id="mainNav" class="nav">
+            <div class="nav-brand" onclick="navigateTo(S.user ? 'dashboard' : 'home')">
+                <i class="fas fa-lightbulb"></i>
+                <span>Inventors Hub</span>
+            </div>
+            <div class="nav-links" id="navLinks"></div>
+            <div class="nav-actions">
+                <button class="btn-icon" id="langToggle" title="EN/AR" onclick="toggleLang()">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <button class="btn-icon" id="themeToggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn-icon hidden" id="notifBtn" onclick="toggleNotifs()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge hidden" id="notifBadge">0</span>
+                </button>
+                <button class="btn-icon hidden" id="logoutBtn" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+            <button class="nav-toggle" id="navToggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+
+        <!-- Notifications -->
+        <div class="notif-panel hidden" id="notifPanel">
+            <div class="notif-header">
+                <h3 data-ar="الإشعارات" data-en="Notifications">الإشعارات</h3>
+                <button class="btn-text" onclick="clearNotifs()" data-ar="مسح الكل" data-en="Clear All">مسح الكل</button>
+            </div>
+            <div class="notif-list" id="notifList"></div>
+        </div>
+
+        <!-- Main -->
+        <main class="main-content" id="mainContent">
+
+            <!-- ========== HOME PAGE ========== -->
+            <div id="page-home" class="page active">
+                <section class="hero">
+                    <div class="hero-content">
+                        <h1 data-ar="منصة المخترعين" data-en="Inventors Platform">منصة المخترعين</h1>
+                        <p class="hero-sub" data-ar="منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان" data-en="A free platform to showcase your inventions and connect with buyers worldwide">منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان</p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary btn-lg" onclick="navigateTo('auth')"><i class="fas fa-rocket"></i> <span data-ar="ابدأ الآن" data-en="Get Started">ابدأ الآن</span></button>
+                            <button class="btn btn-outline btn-lg" onclick="scrollToExplore()"><i class="fas fa-eye"></i> <span data-ar="تصفح المخترعات" data-en="Browse Inventions">تصفح المخترعات</span></button>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="hero-stat"><strong id="heroInvCount">0</strong><span data-ar="مخترعة" data-en="Inventions">مخترعة</span></div>
+                            <div class="hero-stat"><strong id="heroInvCount2">0</strong><span data-ar="مخترع" data-en="Inventor">مخترع</span></div>
+                            <div class="hero-stat"><strong id="heroBuyCount">0</strong><span data-ar="مشتري" data-en="Buyer">مشتري</span></div>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="hero-glow"></div>
+                        <i class="fas fa-lightbulb hero-icon"></i>
+                    </div>
+                </section>
+
+                <!-- Categories -->
+                <section class="section">
+                    <h2 class="section-title"><i class="fas fa-th-large"></i> <span data-ar="التصنيفات" data-en="Categories">التصنيفات</span></h2>
+                    <div class="categories-grid" id="categoriesGrid"></div>
+                </section>
+
+                <!-- Latest Inventions -->
+                <section class="section" id="exploreSection">
+                    <h2 class="section-title"><i class="fas fa-fire"></i> <span data-ar="أحدث المخترعات" data-en="Latest Inventions">أحدث المخترعات</span></h2>
+                    <div class="inventions-grid" id="homeInventionsGrid"></div>
+                </section>
+            </div>
+
+            <!-- ========== AUTH PAGE ========== -->
+            <div id="page-auth" class="page hidden">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <div class="auth-header">
+                            <div class="auth-logo"><i class="fas fa-lightbulb"></i></div>
+                            <h1 id="authTitle" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</h1>
+                            <p id="authSubtitle" data-ar="مرحباً بك في Inventors Hub" data-en="Welcome to Inventors Hub">مرحباً بك في Inventors Hub</p>
+                        </div>
+                        <form id="authForm" onsubmit="return handleAuth(event)">
+                            <!-- Login -->
+                            <div id="loginFields">
+                                <div class="form-group">
+                                    <label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+                                    <div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" id="loginEmail" placeholder="example@email.com" required></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                                    <div class="input-wrapper"><i class="fas fa-lock"></i><input type="password" id="loginPass" placeholder="••••••••" required><button type="button" class="toggle-pass" onclick="togglePass('loginPass')"><i class="fas fa-eye"></i></button></div>
+                                </div>
+                            </div>
+                            <!-- Register -->
+                            <div id="registerFields" class="hidden">
+                                <div class="form-group">
+                                    <label data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label>
+                                    <div class="input-wrapper"><i class="fas fa-user"></i><input type="text" id="regName" placeholder="الاسم الكامل"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+                                    <div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="example@email.com"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-ar="رقم الموبايل" data-en="Phone">رقم الموبايل</label>
+                                    <div class="input-wrapper phone-wrap">
+                                        <i class="fas fa-phone"></i>
+                                        <select id="regCountryCode" class="country-select">
+                                            <option value="20" data-len="10">🇪🇬 مصر (+20)</option>
+                                            <option value="966" data-len="9">🇸🇦 السعودية (+966)</option>
+                                            <option value="971" data-len="9">🇦🇪 الإمارات (+971)</option>
+                                            <option value="962" data-len="9">🇯🇴 الأردن (+962)</option>
+                                            <option value="212" data-len="9">🇲🇦 المغرب (+212)</option>
+                                            <option value="1" data-len="10">🇺🇸 USA (+1)</option>
+                                            <option value="44" data-len="10">🇬🇧 UK (+44)</option>
+                                        </select>
+                                        <input type="tel" id="regPhone" placeholder="رقم الموبايل">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                                    <div class="input-wrapper"><i class="fas fa-lock"></i><input type="password" id="regPass" placeholder="••••••••"><button type="button" class="toggle-pass" onclick="togglePass('regPass')"><i class="fas fa-eye"></i></button></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-ar="تأكيد كلمة المرور" data-en="Confirm Password">تأكيد كلمة المرور</label>
+                                    <div class="input-wrapper"><i class="fas fa-lock"></i><input type="password" id="regPassConfirm" placeholder="••••••••"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-ar="نوع الحساب" data-en="Account Type">نوع الحساب</label>
+                                    <div class="role-selector">
+                                        <label class="role-option"><input type="radio" name="regRole" value="inventor" checked><div class="role-card inventor"><i class="fas fa-flask"></i><span data-ar="مخترع" data-en="Inventor">مخترع</span></div></label>
+                                        <label class="role-option"><input type="radio" name="regRole" value="buyer"><div class="role-card buyer"><i class="fas fa-shopping-bag"></i><span data-ar="مشتري" data-en="Buyer">مشتري</span></div></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Forgot -->
+                            <div id="forgotFields" class="hidden">
+                                <div class="form-group">
+                                    <label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+                                    <div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" id="forgotEmail" placeholder="example@email.com"></div>
+                                </div>
+                                <p class="form-hint" data-ar="سنرسل لك رابط إعادة تعيين كلمة المرور" data-en="We'll send you a password reset link">سنرسل لك رابط إعادة تعيين كلمة المرور</p>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full" id="authSubmit">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span id="authBtnText" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</span>
+                            </button>
+                        </form>
+                        <div class="auth-footer">
+                            <a href="#" onclick="toggleAuthMode('register');return false" id="noAccountLink" class="link" data-ar="ليس لديك حساب؟ سجل الآن" data-en="Don't have an account? Sign up">ليس لديك حساب؟ سجل الآن</a>
+                            <a href="#" onclick="toggleAuthMode('forgot');return false" id="forgotPassLink" class="link" data-ar="نسيت كلمة المرور؟" data-en="Forgot password?">نسيت كلمة المرور؟</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== ADMIN DASHBOARD ========== -->
+            <div id="page-admin" class="page hidden">
+                <div class="dashboard-header">
+                    <h1><i class="fas fa-shield-alt"></i> <span data-ar="لوحة تحكم الأدمن" data-en="Admin Dashboard">لوحة تحكم الأدمن</span></h1>
+                </div>
+                <div class="stats-grid" id="adminStats"></div>
+
+                <!-- Tabs -->
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="switchAdminTab('inventions')" id="tabInventions"><i class="fas fa-lightbulb"></i> <span data-ar="المخترعات" data-en="Inventions">المخترعات</span></button>
+                    <button class="admin-tab" onclick="switchAdminTab('users')" id="tabUsers"><i class="fas fa-users"></i> <span data-ar="المستخدمين" data-en="Users">المستخدمين</span></button>
+                    <button class="admin-tab" onclick="switchAdminTab('categories')" id="tabCategories"><i class="fas fa-th-large"></i> <span data-ar="التصنيفات" data-en="Categories">التصنيفات</span></button>
+                </div>
+
+                <!-- Inventions Tab -->
+                <div class="card admin-tab-content" id="tabContent-inventions">
+                    <div class="card-header">
+                        <h2><i class="fas fa-lightbulb"></i> <span data-ar="إدارة المخترعات" data-en="Manage Inventions">إدارة المخترعات</span></h2>
+                        <div class="header-actions">
+                            <select id="adminInvFilter" class="form-control form-control-sm" onchange="renderAdminInventions()">
+                                <option value="all" data-ar="الكل" data-en="All">الكل</option>
+                                <option value="pending" data-ar="قيد المراجعة" data-en="Pending">قيد المراجعة</option>
+                                <option value="approved" data-ar="مقبول" data-en="Approved">مقبول</option>
+                                <option value="rejected" data-ar="مرفوض" data-en="Rejected">مرفوض</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrapper"><table class="table">
+                            <thead><tr>
+                                <th>#</th><th data-ar="الصورة" data-en="Image">الصورة</th><th data-ar="العنوان" data-en="Title">العنوان</th>
+                                <th data-ar="التصنيف" data-en="Category">التصنيف</th><th data-ar="المخترع" data-en="Inventor">المخترع</th>
+                                <th data-ar="الحالة" data-en="Status">الحالة</th><th data-ar="التاريخ" data-en="Date">التاريخ</th>
+                                <th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+                            </tr></thead>
+                            <tbody id="adminInvBody"></tbody>
+                        </table></div>
+                    </div>
+                </div>
+
+                <!-- Users Tab -->
+                <div class="card admin-tab-content hidden" id="tabContent-users">
+                    <div class="card-header">
+                        <h2><i class="fas fa-users"></i> <span data-ar="إدارة المستخدمين" data-en="Manage Users">إدارة المستخدمين</span></h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrapper"><table class="table">
+                            <thead><tr>
+                                <th>#</th><th data-ar="الاسم" data-en="Name">الاسم</th><th data-ar="البريد" data-en="Email">البريد</th>
+                                <th data-ar="النوع" data-en="Type">النوع</th><th data-ar="الحالة" data-en="Status">الحالة</th>
+                                <th data-ar="التسجيل" data-en="Joined">التسجيل</th><th data-ar="إجراءات" data-en="Actions">إجراءات</th>
+                            </tr></thead>
+                            <tbody id="adminUsersBody"></tbody>
+                        </table></div>
+                    </div>
+                </div>
+
+                <!-- Categories Tab -->
+                <div class="card admin-tab-content hidden" id="tabContent-categories">
+                    <div class="card-header">
+                        <h2><i class="fas fa-th-large"></i> <span data-ar="إدارة التصنيفات" data-en="Manage Categories">إدارة التصنيفات</span></h2>
+                        <button class="btn btn-primary btn-sm" onclick="showAddCategoryModal()"><i class="fas fa-plus"></i> <span data-ar="إضافة تصنيف" data-en="Add Category">إضافة تصنيف</span></button>
+                    </div>
+                    <div class="card-body">
+                        <div class="categories-admin-grid" id="adminCategoriesGrid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== INVENTOR DASHBOARD ========== -->
+            <div id="page-inventor" class="page hidden">
+                <div class="dashboard-header">
+                    <h1><i class="fas fa-flask"></i> <span data-ar="لوحة المخترع" data-en="Inventor Dashboard">لوحة المخترع</span></h1>
+                </div>
+                <div class="stats-grid" id="inventorStats"></div>
+
+                <!-- Add Invention -->
+                <div class="card">
+                    <div class="card-header"><h2><i class="fas fa-plus-circle"></i> <span data-ar="إضافة مخترعة جديدة" data-en="Add New Invention">إضافة مخترعة جديدة</span></h2></div>
+                    <div class="card-body">
+                        <form id="addInventionForm" onsubmit="return addInvention(event)">
+                            <div class="form-row">
+                                <div class="form-group"><label data-ar="عنوان المخترعة" data-en="Invention Title">عنوان المخترعة</label><input type="text" id="invTitle" required placeholder="عنوان المخترعة"></div>
+                                <div class="form-group"><label data-ar="التصنيف" data-en="Category">التصنيف</label>
+                                    <select id="invCategory" class="form-control" required><option value="" data-ar="اختر التصنيف" data-en="Select Category">اختر التصنيف</option></select>
+                                </div>
+                            </div>
+                            <div class="form-group"><label data-ar="وصف المخترعة" data-en="Description">وصف المخترعة</label><textarea id="invDescription" class="form-control" rows="4" required placeholder="اشرح فكرة المخترعة وكيف تعمل..."></textarea></div>
+                            <div class="form-row">
+                                <div class="form-group"><label data-ar="السعر (ج.م) - اختياري" data-en="Price (EGP) - Optional">السعر (ج.م) - اختياري</label><input type="number" id="invPrice" class="form-control" min="0" placeholder="اتركه فارغاً إذا لم يحدد"></div>
+                                <div class="form-group"><label data-ar="رقم براءة الاختراع - اختياري" data-en="Patent No. - Optional">رقم براءة الاختراع - اختياري</label><input type="text" id="invPatent" class="form-control" placeholder="إن وُجد"></div>
+                            </div>
+                            <div class="form-group"><label data-ar="صور المخترعة (بحد أقصى 3)" data-en="Invention Images (max 3)">صور المخترعة (بحد أقصى 3)</label>
+                                <div class="multi-upload" id="invImagesZone">
+                                    <div class="upload-slot" onclick="document.getElementById('invImg1').click()">
+                                        <input type="file" id="invImg1" accept="image/*" class="hidden" onchange="handleInvImage(this,0)">
+                                        <div class="slot-placeholder" id="slot0"><i class="fas fa-camera"></i><span>1</span></div>
+                                        <div class="slot-preview hidden" id="preview0"><img id="imgPrev0" src=""><button type="button" class="btn-remove-slot" onclick="removeInvImage(event,0)"><i class="fas fa-times"></i></button></div>
+                                    </div>
+                                    <div class="upload-slot" onclick="document.getElementById('invImg2').click()">
+                                        <input type="file" id="invImg2" accept="image/*" class="hidden" onchange="handleInvImage(this,1)">
+                                        <div class="slot-placeholder" id="slot1"><i class="fas fa-camera"></i><span>2</span></div>
+                                        <div class="slot-preview hidden" id="preview1"><img id="imgPrev1" src=""><button type="button" class="btn-remove-slot" onclick="removeInvImage(event,1)"><i class="fas fa-times"></i></button></div>
+                                    </div>
+                                    <div class="upload-slot" onclick="document.getElementById('invImg3').click()">
+                                        <input type="file" id="invImg3" accept="image/*" class="hidden" onchange="handleInvImage(this,2)">
+                                        <div class="slot-placeholder" id="slot2"><i class="fas fa-camera"></i><span>3</span></div>
+                                        <div class="slot-preview hidden" id="preview2"><img id="imgPrev2" src=""><button type="button" class="btn-remove-slot" onclick="removeInvImage(event,2)"><i class="fas fa-times"></i></button></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label data-ar="واتساب للتواصل" data-en="WhatsApp Contact">واتساب للتواصل</label><input type="tel" id="invWhatsApp" class="form-control" placeholder="رقم الواتساب"></div>
+                                <div class="form-group"><label data-ar="بريد للتواصل" data-en="Contact Email">بريد للتواصل</label><input type="email" id="invContactEmail" class="form-control" placeholder="بريد للتواصل"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-paper-plane"></i> <span data-ar="إرسال للمراجعة" data-en="Submit for Review">إرسال للمراجعة</span></button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- My Inventions -->
+                <div class="card">
+                    <div class="card-header"><h2><i class="fas fa-list"></i> <span data-ar="مخترعاتي" data-en="My Inventions">مخترعاتي</span></h2></div>
+                    <div class="card-body"><div class="inventions-grid" id="myInventionsGrid"></div></div>
+                </div>
+            </div>
+
+            <!-- ========== BUYER DASHBOARD ========== -->
+            <div id="page-buyer" class="page hidden">
+                <div class="dashboard-header">
+                    <h1><i class="fas fa-shopping-bag"></i> <span data-ar="لوحة المشتري" data-en="Buyer Dashboard">لوحة المشتري</span></h1>
+                </div>
+                <div class="stats-grid" id="buyerStats"></div>
+
+                <!-- Search -->
+                <div class="card search-card">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="buyerSearch" placeholder="ابحث عن مخترعة... / Search inventions..." oninput="searchInventions()">
+                        <select id="buyerCatFilter" class="form-control form-control-sm" onchange="searchInventions()">
+                            <option value="" data-ar="كل التصنيفات" data-en="All Categories">كل التصنيفات</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Browse -->
+                <div class="inventions-grid" id="buyerInventionsGrid"></div>
+
+                <!-- Favorites -->
+                <div class="card" style="margin-top:24px">
+                    <div class="card-header"><h2><i class="fas fa-heart"></i> <span data-ar="المفضلة" data-en="Favorites">المفضلة</span></h2></div>
+                    <div class="card-body"><div class="inventions-grid" id="favoritesGrid"></div></div>
+                </div>
+            </div>
+
+            <!-- ========== INVENTION DETAIL ========== -->
+            <div id="page-detail" class="page hidden">
+                <div id="inventionDetail"></div>
+            </div>
+
+            <!-- ========== LEGAL ========== -->
+            <div id="page-privacy" class="page hidden"><div class="legal-page"><button class="btn btn-secondary page-back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> <span data-ar="رجوع" data-en="Back">رجوع</span></button><div id="privacyContent"></div></div></div>
+            <div id="page-terms" class="page hidden"><div class="legal-page"><button class="btn btn-secondary page-back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> <span data-ar="رجوع" data-en="Back">رجوع</span></button><div id="termsContent"></div></div></div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer" id="mainFooter">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-lightbulb"></i> Inventors Hub</h3>
+                    <p data-ar="منصة مجانية لعرض مخترعات المخترعين" data-en="Free platform for inventors to showcase inventions">منصة مجانية لعرض مخترعات المخترعين</p>
+                </div>
+                <div class="footer-links">
+                    <h4 data-ar="روابط" data-en="Links">روابط</h4>
+                    <a href="#" onclick="navigateTo('privacy');return false" data-ar="سياسة الخصوصية" data-en="Privacy">سياسة الخصوصية</a>
+                    <a href="#" onclick="navigateTo('terms');return false" data-ar="الشروط والأحكام" data-en="Terms">الشروط والأحكام</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>© 2026 Inventors Hub. <span data-ar="جميع الحقوق محفوظة" data-en="All rights reserved.">جميع الحقوق محفوظة.</span></p></div>
+        </footer>
+
+        <button class="back-to-top hidden" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+
+        <!-- Modal -->
+        <div class="modal-overlay hidden" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+            <div class="modal" id="mainModal">
+                <div class="modal-header"><h3 id="modalTitle"></h3><button class="btn-icon" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+                <div class="modal-body" id="modalBody"></div>
+                <div class="modal-footer" id="modalFooter"></div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
