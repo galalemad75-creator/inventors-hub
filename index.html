@@ -24,7 +24,7 @@
         <div class="splash-content">
             <div class="splash-logo"><i class="fas fa-lightbulb"></i></div>
             <h1 class="splash-title">Inventors Hub</h1>
-            <p class="splash-sub" data-ar="جاري التحميل..." data-en="Loading...">جاري التحميل...</p>
+            <p class="splash-sub" data-ar="جاري التحميل..." data-en="Loading..." data-i18n="loading">جاري التحميل...</p>
             <div class="splash-loader"><div class="loader-bar"></div></div>
         </div>
     </div>
@@ -39,9 +39,13 @@
             </div>
             <div class="nav-links" id="navLinks"></div>
             <div class="nav-actions">
-                <button class="btn-icon" id="langToggle" title="EN/AR" onclick="toggleLang()">
-                    <i class="fas fa-globe"></i>
-                </button>
+                <div class="lang-selector" id="langSelector">
+                    <button class="btn-icon" onclick="toggleLangDropdown()" title="Language">
+                        <i class="fas fa-globe"></i>
+                        <span id="currentLang" style="font-size:.7rem;margin-left:4px">🇸🇦 العربية</span>
+                    </button>
+                    <div class="lang-dropdown hidden" id="langDropdown"></div>
+                </div>
                 <button class="btn-icon" id="themeToggle" onclick="toggleTheme()">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -74,11 +78,11 @@
             <div id="page-home" class="page active">
                 <section class="hero">
                     <div class="hero-content">
-                        <h1 data-ar="منصة المخترعين" data-en="Inventors Platform">منصة المخترعين</h1>
-                        <p class="hero-sub" data-ar="منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان" data-en="A free platform to showcase your inventions and connect with buyers worldwide">منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان</p>
+                        <h1 data-ar="منصة المخترعين" data-en="Inventors Platform" data-i18n="heroTitle">منصة المخترعين</h1>
+                        <p class="hero-sub" data-ar="منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان" data-en="A free platform to showcase your inventions and connect with buyers worldwide" data-i18n="heroSub">منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان</p>
                         <div class="hero-actions">
-                            <button class="btn btn-primary btn-lg" onclick="navigateTo('auth')"><i class="fas fa-rocket"></i> <span data-ar="ابدأ الآن" data-en="Get Started">ابدأ الآن</span></button>
-                            <button class="btn btn-outline btn-lg" onclick="scrollToExplore()"><i class="fas fa-eye"></i> <span data-ar="تصفح المخترعات" data-en="Browse Inventions">تصفح المخترعات</span></button>
+                            <button class="btn btn-primary btn-lg" onclick="navigateTo('auth')"><i class="fas fa-rocket"></i> <span data-ar="ابدأ الآن" data-en="Get Started" data-i18n="getStarted">ابدأ الآن</span></button>
+                            <button class="btn btn-outline btn-lg" onclick="scrollToExplore()"><i class="fas fa-eye"></i> <span data-ar="تصفح المخترعات" data-en="Browse Inventions" data-i18n="browseInventions">تصفح المخترعات</span></button>
                         </div>
                         <div class="hero-stats">
                             <div class="hero-stat"><strong id="heroInvCount">0</strong><span data-ar="مخترعة" data-en="Inventions">مخترعة</span></div>
@@ -94,13 +98,13 @@
 
                 <!-- Categories -->
                 <section class="section">
-                    <h2 class="section-title"><i class="fas fa-th-large"></i> <span data-ar="التصنيفات" data-en="Categories">التصنيفات</span></h2>
+                    <h2 class="section-title"><i class="fas fa-th-large"></i> <span data-ar="التصنيفات" data-en="Categories" data-i18n="categories">التصنيفات</span></h2>
                     <div class="categories-grid" id="categoriesGrid"></div>
                 </section>
 
                 <!-- Latest Inventions -->
                 <section class="section" id="exploreSection">
-                    <h2 class="section-title"><i class="fas fa-fire"></i> <span data-ar="أحدث المخترعات" data-en="Latest Inventions">أحدث المخترعات</span></h2>
+                    <h2 class="section-title"><i class="fas fa-fire"></i> <span data-ar="أحدث المخترعات" data-en="Latest Inventions" data-i18n="latestInventions">أحدث المخترعات</span></h2>
                     <div class="inventions-grid" id="homeInventionsGrid"></div>
                 </section>
             </div>
@@ -200,7 +204,7 @@
                 <div class="admin-tabs">
                     <button class="admin-tab active" onclick="switchAdminTab('inventions')" id="tabInventions"><i class="fas fa-lightbulb"></i> <span data-ar="المخترعات" data-en="Inventions">المخترعات</span></button>
                     <button class="admin-tab" onclick="switchAdminTab('users')" id="tabUsers"><i class="fas fa-users"></i> <span data-ar="المستخدمين" data-en="Users">المستخدمين</span></button>
-                    <button class="admin-tab" onclick="switchAdminTab('categories')" id="tabCategories"><i class="fas fa-th-large"></i> <span data-ar="التصنيفات" data-en="Categories">التصنيفات</span></button>
+                    <button class="admin-tab" onclick="switchAdminTab('categories')" id="tabCategories"><i class="fas fa-th-large"></i> <span data-ar="التصنيفات" data-en="Categories" data-i18n="categories">التصنيفات</span></button>
                 </div>
 
                 <!-- Inventions Tab -->
@@ -281,6 +285,7 @@
                                 <div class="form-group"><label data-ar="السعر (ج.م) - اختياري" data-en="Price (EGP) - Optional">السعر (ج.م) - اختياري</label><input type="number" id="invPrice" class="form-control" min="0" placeholder="اتركه فارغاً إذا لم يحدد"></div>
                                 <div class="form-group"><label data-ar="رقم براءة الاختراع - اختياري" data-en="Patent No. - Optional">رقم براءة الاختراع - اختياري</label><input type="text" id="invPatent" class="form-control" placeholder="إن وُجد"></div>
                             </div>
+                            <div class="form-group"><label data-ar="رابط فيديو يوتيوب (اختياري)" data-en="YouTube Video Link (Optional)" data-i18n="youtubeVideo">رابط فيديو يوتيوب (اختياري)</label><input type="url" id="invYouTube" class="form-control" placeholder="https://youtube.com/watch?v=..." data-i18n-placeholder="youtubePlaceholder"><small data-ar="شرح الفكرة بالفيديو" data-en="Explain your idea in video" data-i18n="explainIdea" style="color:var(--text-sec);font-size:.8rem;margin-top:4px;display:block">شرح الفكرة بالفيديو</small></div>
                             <div class="form-group"><label data-ar="صور المخترعة (بحد أقصى 3)" data-en="Invention Images (max 3)">صور المخترعة (بحد أقصى 3)</label>
                                 <div class="multi-upload" id="invImagesZone">
                                     <div class="upload-slot" onclick="document.getElementById('invImg1').click()">
@@ -351,7 +356,8 @@
 
             <!-- ========== LEGAL ========== -->
             <div id="page-privacy" class="page hidden"><div class="legal-page"><button class="btn btn-secondary page-back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> <span data-ar="رجوع" data-en="Back">رجوع</span></button><div id="privacyContent"></div></div></div>
-            <div id="page-terms" class="page hidden"><div class="legal-page"><button class="btn btn-secondary page-back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> <span data-ar="رجوع" data-en="Back">رجوع</span></button><div id="termsContent"></div></div></div>
+            <div id="page-terms" class="page hidden"><div class="legal-page"><button class="btn btn-secondary page-back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> <span data-ar="رجوع" data-en="Back" data-i18n="back">رجوع</span></button><div id="termsContent"></div></div></div>
+            <div id="page-about" class="page hidden"><div class="legal-page"><button class="btn btn-secondary page-back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> <span data-ar="رجوع" data-en="Back" data-i18n="back">رجوع</span></button><div id="aboutContent"></div></div></div>
         </main>
 
         <!-- Footer -->
@@ -359,12 +365,13 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <h3><i class="fas fa-lightbulb"></i> Inventors Hub</h3>
-                    <p data-ar="منصة مجانية لعرض مخترعات المخترعين" data-en="Free platform for inventors to showcase inventions">منصة مجانية لعرض مخترعات المخترعين</p>
+                    <p data-ar="منصة مجانية لعرض مخترعات المخترعين" data-en="Free platform for inventors to showcase inventions" data-i18n="footerDesc">منصة مجانية لعرض مخترعات المخترعين</p>
                 </div>
                 <div class="footer-links">
-                    <h4 data-ar="روابط" data-en="Links">روابط</h4>
-                    <a href="#" onclick="navigateTo('privacy');return false" data-ar="سياسة الخصوصية" data-en="Privacy">سياسة الخصوصية</a>
-                    <a href="#" onclick="navigateTo('terms');return false" data-ar="الشروط والأحكام" data-en="Terms">الشروط والأحكام</a>
+                    <h4 data-ar="روابط" data-en="Links" data-i18n="links">روابط</h4>
+                    <a href="#" onclick="navigateTo('about');return false" data-ar="من نحن" data-en="About Us" data-i18n="about">من نحن</a>
+                    <a href="#" onclick="navigateTo('privacy');return false" data-ar="سياسة الخصوصية" data-en="Privacy" data-i18n="privacy">سياسة الخصوصية</a>
+                    <a href="#" onclick="navigateTo('terms');return false" data-ar="الشروط والأحكام" data-en="Terms" data-i18n="terms">الشروط والأحكام</a>
                 </div>
             </div>
             <div class="footer-bottom"><p>© 2026 Inventors Hub. <span data-ar="جميع الحقوق محفوظة" data-en="All rights reserved.">جميع الحقوق محفوظة.</span></p></div>

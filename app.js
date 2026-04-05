@@ -37,14 +37,72 @@ const DEFAULT_CATEGORIES = [
     { id: 'cat_10', name: 'أخرى', nameEn: 'Other', icon: 'fas fa-ellipsis-h', color: '#64748B' }
 ];
 
+const LANGS = [
+  {code:'ar',name:'العربية',flag:'🇸🇦'},{code:'en',name:'English',flag:'🇺🇸'},
+  {code:'zh',name:'中文',flag:'🇨🇳'},{code:'ja',name:'日本語',flag:'🇯🇵'},
+  {code:'ko',name:'한국어',flag:'🇰🇷'},{code:'de',name:'Deutsch',flag:'🇩🇪'},
+  {code:'fr',name:'Français',flag:'🇫🇷'},{code:'es',name:'Español',flag:'🇪🇸'},
+  {code:'it',name:'Italiano',flag:'🇮🇹'},{code:'pt',name:'Português',flag:'🇧🇷'},
+  {code:'ru',name:'Русский',flag:'🇷🇺'},{code:'hi',name:'हिन्दी',flag:'🇮🇳'},
+  {code:'tr',name:'Türkçe',flag:'🇹🇷'},{code:'nl',name:'Nederlands',flag:'🇳🇱'},
+  {code:'sv',name:'Svenska',flag:'🇸🇪'},{code:'pl',name:'Polski',flag:'🇵🇱'}
+];
+const I18N = {
+  home:{ar:'الرئيسية',en:'Home',zh:'首页',ja:'ホーム',ko:'홈',de:'Startseite',fr:'Accueil',es:'Inicio',it:'Home',pt:'Início',ru:'Главная',hi:'होम',tr:'Ana Sayfa',nl:'Home',sv:'Hem',pl:'Strona główna'},
+  login:{ar:'تسجيل الدخول',en:'Login',zh:'登录',ja:'ログイン',ko:'로그인',de:'Anmelden',fr:'Connexion',es:'Iniciar sesión',it:'Accedi',pt:'Login',ru:'Войти',hi:'लॉगिन',tr:'Giriş',nl:'Inloggen',sv:'Logga in',pl:'Zaloguj się'},
+  dashboard:{ar:'لوحة التحكم',en:'Dashboard',zh:'控制面板',ja:'ダッシュボード',ko:'대시보드',de:'Dashboard',fr:'Tableau de bord',es:'Panel',it:'Pannello',pt:'Painel',ru:'Панель',hi:'डैशबोर्ड',tr:'Kontrol Paneli',nl:'Dashboard',sv:'Kontrollpanel',pl:'Panel'},
+  browse:{ar:'تصفح',en:'Browse',zh:'浏览',ja:'閲覧',ko:'탐색',de:'Durchsuchen',fr:'Parcourir',es:'Explorar',it:'Sfoglia',pt:'Explorar',ru:'Обзор',hi:'ब्राउज़',tr:'Gözat',nl:'Bladeren',sv:'Bläddra',pl:'Przeglądaj'},
+  privacy:{ar:'سياسة الخصوصية',en:'Privacy Policy',zh:'隐私政策',ja:'プライバシーポリシー',ko:'개인정보 보호정책',de:'Datenschutz',fr:'Politique de confidentialité',es:'Política de privacidad',it:'Privacy',pt:'Política de Privacidade',ru:'Конфиденциальность',hi:'गोपनीयता नीति',tr:'Gizlilik Politikası',nl:'Privacybeleid',sv:'Integritetspolicy',pl:'Polityka prywatności'},
+  terms:{ar:'الشروط والأحكام',en:'Terms & Conditions',zh:'使用条款',ja:'利用規約',ko:'이용약관',de:'AGB',fr:'Conditions',es:'Términos',it:'Termini',pt:'Termos',ru:'Условия',hi:'नियम व शर्तें',tr:'Şartlar',nl:'Voorwaarden',sv:'Villkor',pl:'Regulamin'},
+  about:{ar:'من نحن',en:'About Us',zh:'关于我们',ja:'私たちについて',ko:'회사 소개',de:'Über uns',fr:'À propos',es:'Acerca de',it:'Chi siamo',pt:'Sobre nós',ru:'О нас',hi:'हमारे बारे में',tr:'Hakkımızda',nl:'Over ons',sv:'Om oss',pl:'O nas'},
+  getStarted:{ar:'ابدأ الآن',en:'Get Started',zh:'开始使用',ja:'始める',ko:'시작하기',de:'Loslegen',fr:'Commencer',es:'Comenzar',it:'Inizia',pt:'Começar',ru:'Начать',hi:'शुरू करें',tr:'Başla',nl:'Beginnen',sv:'Kom igång',pl:'Rozpocznij'},
+  browseInventions:{ar:'تصفح المخترعات',en:'Browse Inventions',zh:'浏览发明',ja:'発明を閲覧',ko:'발명 탐색',de:'Erfindungen',fr:'Inventions',es:'Inventos',it:'Invenzioni',pt:'Invenções',ru:'Изобретения',hi:'आविष्कार',tr:'İcatlar',nl:'Uitvindingen',sv:'Uppfinningar',pl:'Wynalazki'},
+  inventions:{ar:'مخترعات',en:'Inventions',zh:'发明',ja:'発明',ko:'발명',de:'Erfindungen',fr:'Inventions',es:'Inventos',it:'Invenzioni',pt:'Invenções',ru:'Изобретения',hi:'आविष्कार',tr:'İcatlar',nl:'Uitvindingen',sv:'Uppfinningar',pl:'Wynalazki'},
+  inventor:{ar:'مخترع',en:'Inventor',zh:'发明家',ja:'発明家',ko:'발명가',de:'Erfinder',fr:'Inventeur',es:'Inventor',it:'Inventore',pt:'Inventor',ru:'Изобретатель',hi:'आविष्कारक',tr:'Mucit',nl:'Uitvinder',sv:'Uppfinnare',pl:'Wynalazca'},
+  buyer:{ar:'مشتري',en:'Buyer',zh:'买家',ja:'購入者',ko:'구매자',de:'Käufer',fr:'Acheteur',es:'Comprador',it:'Acquirente',pt:'Comprador',ru:'Покупатель',hi:'खरीदार',tr:'Alıcı',nl:'Koper',sv:'Köpare',pl:'Kupujący'},
+  categories:{ar:'التصنيفات',en:'Categories',zh:'分类',ja:'カテゴリ',ko:'카테고리',de:'Kategorien',fr:'Catégories',es:'Categorías',it:'Categorie',pt:'Categorias',ru:'Категории',hi:'श्रेणियाँ',tr:'Kategoriler',nl:'Categorieën',sv:'Kategorier',pl:'Kategorie'},
+  latestInventions:{ar:'أحدث المخترعات',en:'Latest Inventions',zh:'最新发明',ja:'最新の発明',ko:'최신 발명',de:'Neueste Erfindungen',fr:'Dernières inventions',es:'Últimos inventos',it:'Ultime invenzioni',pt:'Últimas invenções',ru:'Последние изобретения',hi:'नवीनतम आविष्कार',tr:'Son İcatlar',nl:'Nieuwste uitvindingen',sv:'Senaste uppfinningar',pl:'Najnowsze wynalazki'},
+  email:{ar:'البريد الإلكتروني',en:'Email',zh:'电子邮件',ja:'メール',ko:'이메일',de:'E-Mail',fr:'E-mail',es:'Correo',it:'Email',pt:'E-mail',ru:'Эл. почта',hi:'ईमेल',tr:'E-posta',nl:'E-mail',sv:'E-post',pl:'E-mail'},
+  password:{ar:'كلمة المرور',en:'Password',zh:'密码',ja:'パスワード',ko:'비밀번호',de:'Passwort',fr:'Mot de passe',es:'Contraseña',it:'Password',pt:'Senha',ru:'Пароль',hi:'पासवर्ड',tr:'Şifre',nl:'Wachtwoord',sv:'Lösenord',pl:'Hasło'},
+  back:{ar:'رجوع',en:'Back',zh:'返回',ja:'戻る',ko:'뒤로',de:'Zurück',fr:'Retour',es:'Volver',it:'Indietro',pt:'Voltar',ru:'Назад',hi:'वापस',tr:'Geri',nl:'Terug',sv:'Tillbaka',pl:'Wstecz'},
+  loading:{ar:'جاري التحميل...',en:'Loading...',zh:'加载中...',ja:'読み込み中...',ko:'로딩 중...',de:'Wird geladen...',fr:'Chargement...',es:'Cargando...',it:'Caricamento...',pt:'Carregando...',ru:'Загрузка...',hi:'लोड हो रहा है...',tr:'Yükleniyor...',nl:'Laden...',sv:'Laddar...',pl:'Ładowanie...'},
+  footerDesc:{ar:'منصة مجانية لعرض مخترعات المخترعين',en:'Free platform for inventors to showcase inventions',zh:'发明家展示发明的免费平台',ja:'発明家のための無料プラットフォーム',ko:'발명가를 위한 무료 플랫폼',de:'Kostenlose Plattform für Erfinder',fr:'Plateforme gratuite pour les inventeurs',es:'Plataforma gratuita para inventores',it:'Piattaforma gratuita per inventori',pt:'Plataforma gratuita para inventores',ru:'Бесплатная платформа для изобретателей',hi:'आविष्कारकों के लिए मुफ्त मंच',tr:'Mucitler için ücretsiz platform',nl:'Gratis platform voor uitvinders',sv:'Gratis plattform för uppfinnare',pl:'Darmowa platforma dla wynalazców'},
+  links:{ar:'روابط',en:'Links',zh:'链接',ja:'リンク',ko:'링크',de:'Links',fr:'Liens',es:'Enlaces',it:'Link',pt:'Links',ru:'Ссылки',hi:'लिंक',tr:'Bağlantılar',nl:'Links',sv:'Länkar',pl:'Linki'},
+  allRights:{ar:'جميع الحقوق محفوظة.',en:'All rights reserved.',zh:'版权所有。',ja:'著作権所有。',ko:'모든 권리 보유.',de:'Alle Rechte vorbehalten.',fr:'Tous droits réservés.',es:'Todos los derechos reservados.',it:'Tutti i diritti riservati.',pt:'Todos os direitos reservados.',ru:'Все права защищены.',hi:'सर्वाधिकार सुरक्षित।',tr:'Tüm hakları saklıdır.',nl:'Alle rechten voorbehouden.',sv:'Alla rättigheter förbehållna.',pl:'Wszelkie prawa zastrzeżone.'},
+  heroTitle:{ar:'منصة المخترعين',en:'Inventors Platform',zh:'发明家平台',ja:'発明家プラットフォーム',ko:'발명가 플랫폼',de:'Erfinder-Plattform',fr:'Plateforme des inventeurs',es:'Plataforma de inventores',it:'Piattaforma inventori',pt:'Plataforma de inventores',ru:'Платформа изобретателей',hi:'आविष्कारक मंच',tr:'Mucit Platformu',nl:'Uitvindersplatform',sv:'Uppfinnarplattform',pl:'Platforma wynalazców'},
+  heroSub:{ar:'منصة مجانية لعرض مخترعاتك والتواصل مع المشترين من كل مكان',en:'A free platform to showcase your inventions and connect with buyers worldwide',zh:'免费展示发明并与全球买家联系的平台',ja:'あなたの発明を世界中の購入者に紹介する無料プラットフォーム',ko:'전 세계 구매자와 연결하는 무료 플랫폼',de:'Kostenlose Plattform zur Präsentation Ihrer Erfindungen',fr:'Plateforme gratuite pour présenter vos inventions',es:'Plataforma gratuita para mostrar tus inventos',it:'Piattaforma gratuita per presentare le invenzioni',pt:'Plataforma gratuita para exibir suas invenções',ru:'Бесплатная платформа для демонстрации изобретений',hi:'अपने आविष्कारों को प्रदर्शित करने का मुफ्त मंच',tr:'İcatlarınızı sergilemek için ücretsiz platform',nl:'Gratis platform om uitvindingen te tonen',sv:'Gratis plattform för att visa uppfinningar',pl:'Darmowa platforma do prezentowania wynalazków'},
+  youtubeVideo:{ar:'رابط فيديو يوتيوب (اختياري)',en:'YouTube Video Link (Optional)',zh:'YouTube视频链接（可选）',ja:'YouTube動画リンク（任意）',ko:'YouTube 동영상 링크（선택）',de:'YouTube Video-Link (Optional)',fr:'Lien vidéo YouTube (Optionnel)',es:'Enlace de video YouTube (Opcional)',it:'Link video YouTube (Opzionale)',pt:'Link do vídeo YouTube (Opcional)',ru:'Ссылка на YouTube (Необязательно)',hi:'YouTube वीडियो लिंक (वैकल्पिक)',tr:'YouTube Video Bağlantısı (İsteğe Bağlı)',nl:'YouTube video link (Optioneel)',sv:'YouTube-videolänk (Valbart)',pl:'Link do filmu YouTube (Opcjonalnie)'},
+  watchVideo:{ar:'شاهد الفيديو',en:'Watch Video',zh:'观看视频',ja:'動画を見る',ko:'동영상 보기',de:'Video ansehen',fr:'Regarder la vidéo',es:'Ver video',it:'Guarda il video',pt:'Assistir vídeo',ru:'Смотреть видео',hi:'वीडियो देखें',tr:'Videoyu İzle',nl:'Bekijk video',sv:'Titta på video',pl:'Obejrzyj wideo'},
+  explainIdea:{ar:'شرح الفكرة بالفيديو',en:'Explain your idea in video',zh:'用视频解释你的想法',ja:'動画でアイデアを説明',ko:'동영상으로 아이디어 설명',de:'Idee im Video erklären',fr:'Expliquer votre idée en vidéo',es:'Explica tu idea en video',it:'Spiega la tua idea in video',pt:'Explique sua ideia em vídeo',ru:'Объясните идею в видео',hi:'वीडियो में विचार समझाएं',tr:'Fikrinizi Video ile Açıklayın',nl:'Leg uw idee uit in video',sv:'Förklara din idé i video',pl:'Wyjaśnij swój pomysł na wideo'},
+  inventorDashboard:{ar:'لوحة المخترع',en:'Inventor Dashboard',zh:'发明家面板',ja:'発明家ダッシュボード',ko:'발명가 대시보드',de:'Erfinder-Dashboard',fr:'Tableau de bord inventeur',es:'Panel del inventor',it:'Pannello inventore',pt:'Painel do inventor',ru:'Панель изобретателя',hi:'आविष्कारक डैशबोर्ड',tr:'Mucit Paneli',nl:'Uitvinder Dashboard',sv:'Uppfinnarkontrollpanel',pl:'Panel wynalazcy'},
+  buyerDashboard:{ar:'لوحة المشتري',en:'Buyer Dashboard',zh:'买家面板',ja:'購入者ダッシュボード',ko:'구매자 대시보드',de:'Käufer-Dashboard',fr:'Tableau de bord acheteur',es:'Panel del comprador',it:'Pannello acquirente',pt:'Painel do comprador',ru:'Панель покупателя',hi:'खरीदार डैशबोर्ड',tr:'Alıcı Paneli',nl:'Koper Dashboard',sv:'Köparkontrollpanel',pl:'Panel kupującego'},
+  addInvention:{ar:'إضافة مخترعة جديدة',en:'Add New Invention',zh:'添加新发明',ja:'新しい発明を追加',ko:'새 발명 추가',de:'Neue Erfindung',fr:'Ajouter une invention',es:'Agregar invento',it:'Aggiungi invenzione',pt:'Adicionar invenção',ru:'Добавить изобретение',hi:'नया आविष्कार जोड़ें',tr:'Yeni İcat Ekle',nl:'Nieuwe uitvinding',sv:'Lägg till uppfinning',pl:'Dodaj wynalazek'},
+  myInventions:{ar:'مخترعاتي',en:'My Inventions',zh:'我的发明',ja:'自分の発明',ko:'나의 발명',de:'Meine Erfindungen',fr:'Mes inventions',es:'Mis inventos',it:'Le mie invenzioni',pt:'Minhas invenções',ru:'Мои изобретения',hi:'मेरे आविष्कार',tr:'İcatlarım',nl:'Mijn uitvindingen',sv:'Mina uppfinningar',pl:'Moje wynalazki'},
+  favorites:{ar:'المفضلة',en:'Favorites',zh:'收藏',ja:'お気に入り',ko:'즐겨찾기',de:'Favoriten',fr:'Favoris',es:'Favoritos',it:'Preferiti',pt:'Favoritos',ru:'Избранное',hi:'पसंदीदा',tr:'Favoriler',nl:'Favorieten',sv:'Favoriter',pl:'Ulubione'},
+  notifications:{ar:'الإشعارات',en:'Notifications',zh:'通知',ja:'通知',ko:'알림',de:'Benachrichtigungen',fr:'Notifications',es:'Notificaciones',it:'Notifiche',pt:'Notificações',ru:'Уведомления',hi:'सूचनाएं',tr:'Bildirimler',nl:'Meldingen',sv:'Notiser',pl:'Powiadomienia'},
+  clearAll:{ar:'مسح الكل',en:'Clear All',zh:'清除全部',ja:'すべてクリア',ko:'모두 지우기',de:'Alle löschen',fr:'Tout effacer',es:'Limpiar todo',it:'Cancella tutto',pt:'Limpar tudo',ru:'Очистить всё',hi:'सभी साफ़ करें',tr:'Tümünü Temizle',nl:'Alles wissen',sv:'Rensa alla',pl:'Wyczyść wszystko'},
+  noNotifs:{ar:'لا توجد إشعارات',en:'No notifications',zh:'没有通知',ja:'通知なし',ko:'알림 없음',de:'Keine Benachrichtigungen',fr:'Aucune notification',es:'Sin notificaciones',it:'Nessuna notifica',pt:'Sem notificações',ru:'Нет уведомлений',hi:'कोई सूचना नहीं',tr:'Bildirim yok',nl:'Geen meldingen',sv:'Inga notiser',pl:'Brak powiadomień'},
+  selectLanguage:{ar:'اختر اللغة',en:'Select Language',zh:'选择语言',ja:'言語を選択',ko:'언어 선택',de:'Sprache wählen',fr:'Choisir la langue',es:'Seleccionar idioma',it:'Seleziona lingua',pt:'Selecionar idioma',ru:'Выберите язык',hi:'भाषा चुनें',tr:'Dil Seçin',nl:'Selecteer taal',sv:'Välj språk',pl:'Wybierz język'}
+};
+
 // ==================== LANGUAGE ====================
 function applyLang() {
     document.documentElement.lang = S.lang;
     document.documentElement.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (I18N[key] && I18N[key][S.lang]) el.textContent = I18N[key][S.lang];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (I18N[key] && I18N[key][S.lang]) el.placeholder = I18N[key][S.lang];
+    });
     document.querySelectorAll('[data-ar]').forEach(el => {
         const txt = S.lang === 'ar' ? el.dataset.ar : el.dataset.en;
         if (txt) el.textContent = txt;
     });
+    const ccl = document.getElementById('currentLang');
+    if (ccl) { const li = LANGS.find(l => l.code === S.lang); if (li) ccl.textContent = li.flag + ' ' + li.name; }
 }
 function toggleLang() {
     S.lang = S.lang === 'ar' ? 'en' : 'ar';
@@ -52,6 +110,21 @@ function toggleLang() {
     applyLang();
     if (S.user) renderDashboard();
     renderHome();
+}
+function buildLangSelector() {
+    const c = document.getElementById('langDropdown');
+    if (!c) return;
+    c.innerHTML = LANGS.map(l => `<button class="lang-option ${l.code===S.lang?'active':''}" onclick="setLang('${l.code}')">${l.flag} ${l.name}</button>`).join('');
+}
+function setLang(code) {
+    S.lang = code; localStorage.setItem('ih_lang', S.lang);
+    document.getElementById('langDropdown').classList.add('hidden');
+    applyLang(); if (S.user) renderDashboard(); renderHome();
+}
+function toggleLangDropdown() {
+    const dd = document.getElementById('langDropdown');
+    dd.classList.toggle('hidden');
+    if (!dd.classList.contains('hidden')) buildLangSelector();
 }
 
 // ==================== THEME ====================
@@ -76,6 +149,9 @@ function navigateTo(page) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (page === 'detail') renderDetail();
     if (page === 'home') renderHome();
+    if (page === 'privacy') renderLegal('privacy');
+    if (page === 'terms') renderLegal('terms');
+    if (page === 'about') renderAbout();
 }
 
 function goBack() {
@@ -272,18 +348,20 @@ function postLogin() {
 function updateNav() {
     const nav = document.getElementById('navLinks');
     if (!S.user) {
-        nav.innerHTML = `<a href="#" onclick="navigateTo('home');return false" class="active" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
-            <a href="#" onclick="navigateTo('auth');return false" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</a>`;
+        nav.innerHTML = `<a href="#" onclick="navigateTo('home');return false" class="active" data-i18n="home">الرئيسية</a>
+            <a href="#" onclick="navigateTo('auth');return false" data-i18n="login">تسجيل الدخول</a>`;
+        applyLang();
         return;
     }
     const links = {
-        admin: `<a href="#" onclick="navigateTo('admin');return false" class="active" data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</a>`,
-        inventor: `<a href="#" onclick="navigateTo('inventor');return false" class="active" data-ar="لوحة المخترع" data-en="Dashboard">لوحة المخترع</a>
-            <a href="#" onclick="navigateTo('home');return false" data-ar="تصفح" data-en="Browse">تصفح</a>`,
-        buyer: `<a href="#" onclick="navigateTo('buyer');return false" class="active" data-ar="لوحة المشتري" data-en="Dashboard">لوحة المشتري</a>
-            <a href="#" onclick="navigateTo('home');return false" data-ar="تصفح" data-en="Browse">تصفح</a>`
+        admin: `<a href="#" onclick="navigateTo('admin');return false" class="active" data-i18n="dashboard">لوحة التحكم</a>`,
+        inventor: `<a href="#" onclick="navigateTo('inventor');return false" class="active" data-i18n="inventorDashboard">لوحة المخترع</a>
+            <a href="#" onclick="navigateTo('home');return false" data-i18n="browse">تصفح</a>`,
+        buyer: `<a href="#" onclick="navigateTo('buyer');return false" class="active" data-i18n="buyerDashboard">لوحة المشتري</a>
+            <a href="#" onclick="navigateTo('home');return false" data-i18n="browse">تصفح</a>`
     };
     nav.innerHTML = links[S.user.role] || '';
+    applyLang();
 }
 
 function handleLogout() {
@@ -435,7 +513,7 @@ function renderDetail() {
                     <div class="detail-meta-item"><i class="fas fa-calendar"></i><div><div class="meta-label">${isAr ? 'تاريخ النشر' : 'Published'}</div><div class="meta-value">${fmtDate(inv.date)}</div></div></div>
                     ${inv.patent ? `<div class="detail-meta-item"><i class="fas fa-certificate"></i><div><div class="meta-label">${isAr ? 'براءة الاختراع' : 'Patent'}</div><div class="meta-value">${inv.patent}</div></div></div>` : ''}
                 </div>
-                ${contactBtns ? `<div class="detail-contact">${contactBtns}</div>` : ''}
+                ${(() => { const yt = inv.youtubeUrl ? `<div style="margin-top:20px"><h3 style="margin-bottom:12px"><i class="fab fa-youtube" style="color:#FF0000"></i> <span data-i18n="watchVideo">شاهد الفيديو</span></h3><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius)"><iframe src="${inv.youtubeUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen></iframe></div></div>` : ''; return (contactBtns || yt) ? `<div class="detail-contact">${contactBtns}${yt}</div>` : ''; })()}
             </div>
         </div>`;
 }
@@ -676,6 +754,7 @@ function addInvention(e) {
     const patent = document.getElementById('invPatent').value.trim();
     const whatsapp = document.getElementById('invWhatsApp').value.trim();
     const contactEmail = document.getElementById('invContactEmail').value.trim();
+    const youtubeUrl = document.getElementById('invYouTube').value.trim();
 
     if (!title || !category || !description) { showToast(isAr ? 'جميع الحقول المطلوبة' : 'All fields required', 'error'); return false; }
 
@@ -686,6 +765,7 @@ function addInvention(e) {
         patent: patent || null,
         whatsapp: whatsapp || null,
         contactEmail: contactEmail || null,
+        youtubeUrl: youtubeUrl || null,
         images, inventorId: S.user.id,
         status: 'pending', availability: 'available',
         date: new Date().toISOString()
@@ -770,6 +850,31 @@ function searchInventions() {
 }
 
 // ==================== LEGAL ====================
+
+function renderAbout() {
+    const lang = S.lang;
+    const el = document.getElementById('aboutContent');
+    const aboutTexts = {
+        ar: '<h1>من نحن</h1><p class="highlight">مرحباً بكم في Inventors Hub</p><h2>رؤيتنا</h2><p>نؤمن بأن كل فكرة تستحق أن ترى النور. منصتنا تهدف إلى ربط المخترعين بالمشترين والمستثمرين من كل مكان في العالم.</p><h2>ماذا نقدم؟</h2><ul><li>منصة مجانية لعرض المخترعات</li><li>دعم 16 لغة عالمية لتسهيل التسويق</li><li>نظام تصنيف متقدم</li><li>التواصل المباشر عبر الواتساب والبريد</li><li>نظام مراجعة لضمان جودة المحتوى</li><li>إضافة فيديو يوتيوب لشرح الفكرة</li></ul><h2>كيف يعمل؟</h2><ul><li>سجل حساب كمخترع أو مشتري</li><li>المخترعون: أضف مخترعاتك مع صور وشرح بالفيديو</li><li>المشترون: تصفح وابحث وتواصل مباشرة</li></ul><h2>تواصل معنا</h2><p>لأي استفسار أو اقتراح، تواصل معنا عبر المنصة.</p>',
+        en: '<h1>About Us</h1><p class="highlight">Welcome to Inventors Hub</p><h2>Our Vision</h2><p>We believe every idea deserves to see the light. Our platform connects inventors with buyers and investors worldwide.</p><h2>What We Offer?</h2><ul><li>A free platform to showcase inventions</li><li>Support for 16 global languages for easy marketing</li><li>Advanced classification system</li><li>Direct contact via WhatsApp and Email</li><li>Review system to ensure quality</li><li>YouTube video support to explain your idea</li></ul><h2>How It Works?</h2><ul><li>Sign up as an inventor or buyer</li><li>Inventors: Add your inventions with images and video explanations</li><li>Buyers: Browse, search and contact directly</li></ul><h2>Contact Us</h2><p>For any inquiries or suggestions, contact us through the platform.</p>',
+        zh: '<h1>关于我们</h1><p class="highlight">欢迎来到Inventors Hub</p><h2>我们的愿景</h2><p>我们相信每个想法都值得被看到。我们的平台将发明家与全球买家和投资者联系起来。</p><h2>我们提供什么？</h2><ul><li>免费展示发明的平台</li><li>支持16种全球语言，便于营销</li><li>先进的分类系统</li><li>通过WhatsApp和邮箱直接联系</li><li>质量审核系统</li><li>YouTube视频支持</li></ul>',
+        ja: '<h1>私たちについて</h1><p class="highlight">Inventors Hubへようこそ</p><h2>私たちのビジョン</h2><p>すべてのアイデアは日の目を見る価値があると信じています。</p><h2>提供サービス</h2><ul><li>発明を展示する無料プラットフォーム</li><li>16の世界言語をサポート</li><li>YouTube動画サポート</li></ul>',
+        ko: '<h1>회사 소개</h1><p class="highlight">Inventors Hub에 오신 것을 환영합니다</p><h2>서비스 내용</h2><ul><li>발명을 선보이는 무료 플랫폼</li><li>16개 글로벌 언어 지원</li><li>YouTube 동영상 지원</li></ul>',
+        de: '<h1>Über uns</h1><p class="highlight">Willkommen bei Inventors Hub</p><h2>Was bieten wir?</h2><ul><li>Kostenlose Plattform zur Präsentation von Erfindungen</li><li>Unterstützung von 16 globalen Sprachen</li><li>YouTube-Video-Unterstützung</li></ul>',
+        fr: '<h1>À propos</h1><p class="highlight">Bienvenue sur Inventors Hub</p><h2>Ce que nous offrons?</h2><ul><li>Plateforme gratuite pour présenter les inventions</li><li>Support de 16 langues mondiales</li><li>Support vidéo YouTube</li></ul>',
+        es: '<h1>Acerca de nosotros</h1><p class="highlight">Bienvenido a Inventors Hub</p><h2>¿Qué ofrecemos?</h2><ul><li>Plataforma gratuita para mostrar inventos</li><li>Soporte para 16 idiomas</li><li>Soporte de video YouTube</li></ul>',
+        it: '<h1>Chi siamo</h1><p class="highlight">Benvenuto su Inventors Hub</p><h2>Cosa offriamo?</h2><ul><li>Piattaforma gratuita per presentare le invenzioni</li><li>Supporto per 16 lingue</li><li>Supporto video YouTube</li></ul>',
+        pt: '<h1>Sobre nós</h1><p class="highlight">Bem-vindo ao Inventors Hub</p><h2>O que oferecemos?</h2><ul><li>Plataforma gratuita para exibir invenções</li><li>Suporte a 16 idiomas</li><li>Suporte de vídeo YouTube</li></ul>',
+        ru: '<h1>О нас</h1><p class="highlight">Добро пожаловать в Inventors Hub</p><h2>Что мы предлагаем?</h2><ul><li>Бесплатная платформа для демонстрации изобретений</li><li>Поддержка 16 языков</li><li>Поддержка видео YouTube</li></ul>',
+        hi: '<h1>हमारे बारे में</h1><p class="highlight">Inventors Hub में आपका स्वागत है</p><h2>हम क्या प्रदान करते हैं?</h2><ul><li>आविष्कार प्रदर्शित करने के लिए मुफ्त मंच</li><li>16 वैश्विक भाषाओं का समर्थन</li><li>YouTube वीडियो समर्थन</li></ul>',
+        tr: '<h1>Hakkımızda</h1><p class="highlight">Inventors Hub\'a Hoş Geldiniz</p><h2>Ne Sunuyoruz?</h2><ul><li>İcatları sergilemek için ücretsiz platform</li><li>16 küresel dil desteği</li><li>YouTube video desteği</li></ul>',
+        nl: '<h1>Over ons</h1><p class="highlight">Welkom bij Inventors Hub</p><h2>Wat bieden wij?</h2><ul><li>Gratis platform om uitvindingen te tonen</li><li>Ondersteuning voor 16 wereldtalen</li><li>YouTube video-ondersteuning</li></ul>',
+        sv: '<h1>Om oss</h1><p class="highlight">Välkommen till Inventors Hub</p><h2>Vad erbjuder vi?</h2><ul><li>Gratis plattform för att visa uppfinningar</li><li>Stöd för 16 globala språk</li><li>YouTube-videostöd</li></ul>',
+        pl: '<h1>O nas</h1><p class="highlight">Witamy w Inventors Hub</p><h2>Co oferujemy?</h2><ul><li>Darmowa platforma do prezentowania wynalazków</li><li>Wsparcie 16 języków</li><li>Wsparcie wideo YouTube</li></ul>'
+    };
+    el.innerHTML = aboutTexts[lang] || aboutTexts['en'];
+}
+
 function renderLegal(page) {
     const isAr = S.lang === 'ar';
     const content = {
