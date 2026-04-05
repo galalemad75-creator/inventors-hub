@@ -790,19 +790,41 @@ function addInvention(e) {
     return false;
 }
 
-function handleInvImage(input, idx) {
+async function handleInvImage(input, idx) {
     const file = input.files[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { showToast(S.lang === 'ar' ? 'حجم الصورة كبير' : 'Image too large', 'error'); input.value = ''; return; }
+    if (file.size > 5 * 1024 * 1024) { showToast(S.lang === 'ar' ? 'الحد الأقصى 5MB' : 'Max 5MB', 'error'); input.value = ''; return; }
     if (!file.type.startsWith('image/')) { showToast(S.lang === 'ar' ? 'صورة فقط' : 'Images only', 'error'); input.value = ''; return; }
+    
+    // Show preview immediately
     const reader = new FileReader();
     reader.onload = function (e) {
-        S.invImages[idx] = e.target.result;
         document.getElementById('slot' + idx).classList.add('hidden');
         document.getElementById('preview' + idx).classList.remove('hidden');
         document.getElementById('imgPrev' + idx).src = e.target.result;
     };
     reader.readAsDataURL(file);
+    
+    // Upload to Cloudinary (with base64 fallback)
+    try {
+        if (typeof CLOUDINARY_CLOUD_NAME !== 'undefined') {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', typeof CLOUDINARY_UPLOAD_PRESET !== 'undefined' ? CLOUDINARY_UPLOAD_PRESET : 'ml_default');
+            const res = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (data.secure_url) {
+                S.invImages[idx] = data.secure_url;
+                showToast(S.lang === 'ar' ? '✅ تم رفع الصورة' : '✅ Uploaded', 'success');
+                return;
+            }
+        }
+        // Fallback to base64
+        S.invImages[idx] = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file); });
+    } catch (err) {
+        console.warn('Cloudinary failed:', err);
+        S.invImages[idx] = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(file); });
+    }
 }
 
 function removeInvImage(e, idx) {
