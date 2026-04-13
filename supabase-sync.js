@@ -41,7 +41,7 @@
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       
       // Test connection
-      await supabaseClient.from('kv_store').select('key').limit(1);
+      await supabaseClient.from(typeof SITE_ID!=='undefined'&&SITE_ID?SITE_ID+'_kv_store':'kv_store').select('key').limit(1);
       useSupabase = true;
       console.log('[Inventors Hub] ✅ Connected to Supabase — data will sync!');
     } catch (err) {
@@ -68,7 +68,7 @@
 
       try {
         const { data, error } = await supabaseClient
-          .from('kv_store')
+          .from(typeof SITE_ID!=='undefined'&&SITE_ID?SITE_ID+'_kv_store':'kv_store')
           .select('value')
           .eq('key', PREFIX + key)
           .single();
@@ -93,7 +93,7 @@
       // Sync to Supabase in background
       try {
         await supabaseClient
-          .from('kv_store')
+          .from(typeof SITE_ID!=='undefined'&&SITE_ID?SITE_ID+'_kv_store':'kv_store')
           .upsert({ 
             key: PREFIX + key, 
             value: value, 
@@ -108,7 +108,7 @@
       localStorage.removeItem(PREFIX + key);
       if (!useSupabase) return;
       try {
-        await supabaseClient.from('kv_store').delete().eq('key', PREFIX + key);
+        await supabaseClient.from(typeof SITE_ID!=='undefined'&&SITE_ID?SITE_ID+'_kv_store':'kv_store').delete().eq('key', PREFIX + key);
       } catch {}
     },
 
@@ -119,7 +119,7 @@
       if (useSupabase) {
         try {
           const { data } = await supabaseClient
-            .from('kv_store')
+            .from(typeof SITE_ID!=='undefined'&&SITE_ID?SITE_ID+'_kv_store':'kv_store')
             .select('key, value')
             .like('key', PREFIX + '%');
           
